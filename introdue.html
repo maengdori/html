@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>딱 맞추기 타이머 게임</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1.5px;
+        }
+
+        label {
+            font-size: 18px;
+            font-weight: 500;
+            margin-right: 10px;
+        }
+
+        input[type="number"] {
+            font-size: 18px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            width: 120px;
+            outline: none;
+            transition: box-shadow 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            box-shadow: 0 0 8px 2px #ffdd59;
+        }
+
+        button {
+            font-size: 18px;
+            padding: 12px 30px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 30px;
+            background: #ff6f91;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(255, 111, 145, 0.5);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+            user-select: none;
+        }
+
+        button:hover {
+            background: #ff528b;
+            box-shadow: 0 8px 20px rgba(255, 82, 139, 0.7);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        #display {
+            font-size: 48px;
+            font-weight: 700;
+            margin-top: 40px;
+            height: 60px;
+            text-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        #result {
+            background: rgba(255, 255, 255, 0.15);
+            margin-top: 30px;
+            padding: 20px 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-size: 22px;
+            line-height: 1.4;
+            min-width: 320px;
+            max-width: 400px;
+            user-select: text;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+
+            #result {
+                font-size: 18px;
+                min-width: auto;
+                max-width: 100%;
+                padding: 15px 20px;
+            }
+
+            #display {
+                font-size: 36px;
+            }
+
+            input[type="number"] {
+                width: 100px;
+                font-size: 16px;
+                padding: 6px 10px;
+            }
+
+            button {
+                padding: 10px 24px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>딱 맞추기 타이머 게임</h1>
+    <div>
+        <label for="targetTime">목표 시간 (초): </label>
+        <input type="number" id="targetTime" min="0.01" step="0.01" value="7.77" />
+    </div>
+    <button id="toggleBtn">시작</button>
+
+    <div id="display">0.00초</div>
+    <div id="result"></div>
+
+    <script>
+        const targetInput = document.getElementById('targetTime');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const display = document.getElementById('display');
+        const result = document.getElementById('result');
+
+        let startTime = null;
+        let timerId = null;
+        let running = false;
+
+        function formatTime(ms) {
+            return (ms / 1000).toFixed(2) + '초';
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            if (!running) {
+                const target = parseFloat(targetInput.value);
+                if (isNaN(target) || target <= 0) {
+                    alert('목표 시간을 0보다 큰 숫자로 입력하세요!');
+                    return;
+                }
+                startTime = performance.now();
+                timerId = setInterval(() => {
+                    const elapsed = performance.now() - startTime;
+                    display.textContent = formatTime(elapsed);
+                }, 10);
+                toggleBtn.textContent = '멈추기';
+                targetInput.disabled = true;
+                result.textContent = '';
+                running = true;
+            } else {
+                clearInterval(timerId);
+                const elapsed = performance.now() - startTime;
+                display.textContent = formatTime(elapsed);
+                toggleBtn.textContent = '시작';
+                targetInput.disabled = false;
+                running = false;
+
+                const target = parseFloat(targetInput.value);
+                const diff = elapsed / 1000 - target;
+                const diffAbs = Math.abs(diff);
+
+                let msg = `목표 시간: ${target.toFixed(2)}초<br>측정 시간: ${formatTime(elapsed)}<br>`;
+                msg += `오차: ${diff >= 0 ? '+' : '-'}${diffAbs.toFixed(2)}초`;
+
+                if (diffAbs < 0.1) {
+                    msg += '<br>🎉 아주 정확해요!';
+                } else if (diffAbs < 0.5) {
+                    msg += '<br>👍 꽤 근접했네요!';
+                } else {
+                    msg += '<br>😅 조금 더 연습이 필요해요.';
+                }
+
+                result.innerHTML = msg;
+            }
+        });
+    </script>
+</body>
+
+</html>
