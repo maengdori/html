@@ -1,198 +1,228 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
-    <meta charset="UTF-8" />
-    <title>딱 맞추기 타이머 게임</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+<meta charset="UTF-8" />
+<title>딱 맞추기 타이머 게임</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
 
-        * {
-            box-sizing: border-box;
-        }
+  * {
+    box-sizing: border-box;
+  }
 
-        body {
-            margin: 0;
-            font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+  body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(120deg, #232526, #1c1c1c);
+    color: #eee;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 20px;
+  }
 
-        h1 {
-            font-weight: 700;
-            margin-bottom: 30px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            letter-spacing: 1.5px;
-        }
+  h1 {
+    font-weight: 600;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    text-align: center;
+    letter-spacing: 1.2px;
+  }
 
-        label {
-            font-size: 18px;
-            font-weight: 500;
-            margin-right: 10px;
-        }
+  label {
+    font-size: 1rem;
+    color: #aaa;
+    margin-right: 8px;
+  }
 
-        input[type="number"] {
-            font-size: 18px;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 8px;
-            width: 120px;
-            outline: none;
-            transition: box-shadow 0.3s ease;
-        }
+  #inputSection {
+    margin-bottom: 20px;
+    text-align: center;
+  }
 
-        input[type="number"]:focus {
-            box-shadow: 0 0 8px 2px #ffdd59;
-        }
+  input[type="number"] {
+    font-size: 1.1rem;
+    padding: 6px 10px;
+    width: 90px;
+    border: none;
+    border-radius: 6px;
+    outline: none;
+    background: #333;
+    color: #eee;
+    text-align: center;
+    transition: box-shadow 0.3s ease;
+  }
+  input[type="number"]:focus {
+    box-shadow: 0 0 8px 2px #5cc1ff;
+  }
 
-        button {
-            font-size: 18px;
-            padding: 12px 30px;
-            margin-top: 20px;
-            border: none;
-            border-radius: 30px;
-            background: #ff6f91;
-            color: white;
-            cursor: pointer;
-            box-shadow: 0 6px 15px rgba(255, 111, 145, 0.5);
-            transition: background 0.3s ease, box-shadow 0.3s ease;
-            user-select: none;
-        }
+  #targetDisplay {
+    margin-top: 12px;
+    font-size: 4.5rem;
+    font-weight: 700;
+    color: #5cc1ff;
+    text-shadow: 0 3px 12px rgba(92,193,255,0.7);
+    user-select: none;
+    min-height: 70px;
+  }
 
-        button:hover {
-            background: #ff528b;
-            box-shadow: 0 8px 20px rgba(255, 82, 139, 0.7);
-        }
+  #toggleBtn {
+    width: 100%;
+    max-width: 360px;
+    font-size: 2.5rem;
+    padding: 20px 0;
+    border: none;
+    border-radius: 40px;
+    background: #0b84ff;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(11,132,255,0.7);
+    user-select: none;
+    transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
+  }
+  #toggleBtn:hover {
+    background: #0977d9;
+    box-shadow: 0 10px 25px rgba(9,119,217,0.8);
+  }
+  #toggleBtn:active {
+    transform: scale(0.97);
+  }
 
-        button:active {
-            transform: scale(0.98);
-        }
+  #display {
+    font-size: 6rem;
+    font-weight: 700;
+    margin-top: 40px;
+    color: #5cc1ff;
+    text-shadow: 0 3px 15px rgba(92,193,255,0.7);
+    user-select: none;
+    min-height: 100px;
+  }
 
-        #display {
-            font-size: 48px;
-            font-weight: 700;
-            margin-top: 40px;
-            height: 60px;
-            text-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-        }
+  #result {
+    margin-top: 35px;
+    font-size: 1.3rem;
+    color: #bbb;
+    max-width: 360px;
+    text-align: center;
+    line-height: 1.4;
+    user-select: text;
+    min-height: 90px;
+    background: #222;
+    border-radius: 15px;
+    padding: 15px 20px;
+    box-shadow: inset 0 0 8px #111;
+  }
 
-        #result {
-            background: rgba(255, 255, 255, 0.15);
-            margin-top: 30px;
-            padding: 20px 25px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            font-size: 22px;
-            line-height: 1.4;
-            min-width: 320px;
-            max-width: 400px;
-            user-select: text;
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 15px;
-            }
-
-            #result {
-                font-size: 18px;
-                min-width: auto;
-                max-width: 100%;
-                padding: 15px 20px;
-            }
-
-            #display {
-                font-size: 36px;
-            }
-
-            input[type="number"] {
-                width: 100px;
-                font-size: 16px;
-                padding: 6px 10px;
-            }
-
-            button {
-                padding: 10px 24px;
-                font-size: 16px;
-            }
-        }
-    </style>
+  @media (max-width: 400px) {
+    #toggleBtn {
+      font-size: 2rem;
+      padding: 16px 0;
+      max-width: 100%;
+      border-radius: 30px;
+    }
+    #display {
+      font-size: 4.5rem;
+      min-height: 80px;
+    }
+    #result {
+      font-size: 1.1rem;
+      max-width: 100%;
+      min-height: 80px;
+    }
+    input[type="number"] {
+      width: 70px;
+      font-size: 1rem;
+      padding: 5px 8px;
+    }
+    #targetDisplay {
+      font-size: 3rem;
+      min-height: 60px;
+    }
+  }
+</style>
 </head>
-
 <body>
-    <h1>딱 맞추기 타이머 게임</h1>
-    <div>
-        <label for="targetTime">목표 시간 (초): </label>
-        <input type="number" id="targetTime" min="0.01" step="0.01" value="7.77" />
-    </div>
-    <button id="toggleBtn">시작</button>
+<h1>딱 맞추기 타이머 게임</h1>
 
-    <div id="display">0.00초</div>
-    <div id="result"></div>
+<div id="inputSection">
+  <label for="targetTime">목표 시간 (초): </label>
+  <input type="number" id="targetTime" min="0.01" step="0.01" value="7.77" />
+  <div id="targetDisplay">7.77초</div>
+</div>
 
-    <script>
-        const targetInput = document.getElementById('targetTime');
-        const toggleBtn = document.getElementById('toggleBtn');
-        const display = document.getElementById('display');
-        const result = document.getElementById('result');
+<button id="toggleBtn">시작</button>
 
-        let startTime = null;
-        let timerId = null;
-        let running = false;
+<div id="display">0.00초</div>
+<div id="result"></div>
 
-        function formatTime(ms) {
-            return (ms / 1000).toFixed(2) + '초';
-        }
+<script>
+  const targetInput = document.getElementById('targetTime');
+  const targetDisplay = document.getElementById('targetDisplay');
+  const toggleBtn = document.getElementById('toggleBtn');
+  const display = document.getElementById('display');
+  const result = document.getElementById('result');
 
-        toggleBtn.addEventListener('click', () => {
-            if (!running) {
-                const target = parseFloat(targetInput.value);
-                if (isNaN(target) || target <= 0) {
-                    alert('목표 시간을 0보다 큰 숫자로 입력하세요!');
-                    return;
-                }
-                startTime = performance.now();
-                timerId = setInterval(() => {
-                    const elapsed = performance.now() - startTime;
-                    display.textContent = formatTime(elapsed);
-                }, 10);
-                toggleBtn.textContent = '멈추기';
-                targetInput.disabled = true;
-                result.textContent = '';
-                running = true;
-            } else {
-                clearInterval(timerId);
-                const elapsed = performance.now() - startTime;
-                display.textContent = formatTime(elapsed);
-                toggleBtn.textContent = '시작';
-                targetInput.disabled = false;
-                running = false;
+  let startTime = null;
+  let timerId = null;
+  let running = false;
 
-                const target = parseFloat(targetInput.value);
-                const diff = elapsed / 1000 - target;
-                const diffAbs = Math.abs(diff);
+  function formatTime(ms) {
+    return (ms / 1000).toFixed(2) + '초';
+  }
 
-                let msg = `목표 시간: ${target.toFixed(2)}초<br>측정 시간: ${formatTime(elapsed)}<br>`;
-                msg += `오차: ${diff >= 0 ? '+' : '-'}${diffAbs.toFixed(2)}초`;
+  targetInput.addEventListener('input', () => {
+    let val = parseFloat(targetInput.value);
+    if (isNaN(val) || val <= 0) {
+      targetDisplay.textContent = '잘못된 입력';
+    } else {
+      targetDisplay.textContent = val.toFixed(2) + '초';
+    }
+  });
 
-                if (diffAbs < 0.1) {
-                    msg += '<br>🎉 아주 정확해요!';
-                } else if (diffAbs < 0.5) {
-                    msg += '<br>👍 꽤 근접했네요!';
-                } else {
-                    msg += '<br>😅 조금 더 연습이 필요해요.';
-                }
+  toggleBtn.addEventListener('click', () => {
+    if (!running) {
+      const target = parseFloat(targetInput.value);
+      if (isNaN(target) || target <= 0) {
+        alert('목표 시간을 0보다 큰 숫자로 입력하세요!');
+        return;
+      }
+      startTime = performance.now();
+      timerId = setInterval(() => {
+        const elapsed = performance.now() - startTime;
+        display.textContent = formatTime(elapsed);
+      }, 10);
+      toggleBtn.textContent = '멈추기';
+      targetInput.disabled = true;
+      result.textContent = '';
+      running = true;
+    } else {
+      clearInterval(timerId);
+      const elapsed = performance.now() - startTime;
+      display.textContent = formatTime(elapsed);
+      toggleBtn.textContent = '시작';
+      targetInput.disabled = false;
+      running = false;
 
-                result.innerHTML = msg;
-            }
-        });
-    </script>
+      const target = parseFloat(targetInput.value);
+      const diff = elapsed / 1000 - target;
+      const diffAbs = Math.abs(diff);
+
+      let msg = `목표 시간: ${target.toFixed(2)}초<br>측정 시간: ${formatTime(elapsed)}<br>`;
+      msg += `오차: ${diff >= 0 ? '+' : '-'}${diffAbs.toFixed(2)}초`;
+
+      if (diffAbs < 0.1) {
+        msg += '<br>🎉 아주 정확해요!';
+      } else if (diffAbs < 0.5) {
+        msg += '<br>👍 꽤 근접했네요!';
+      } else {
+        msg += '<br>😅 조금 더 연습이 필요해요.';
+      }
+
+      result.innerHTML = msg;
+    }
+  });
+</script>
 </body>
-
 </html>
